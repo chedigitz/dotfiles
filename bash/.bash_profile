@@ -3,7 +3,7 @@
 ###############################################################################
 
 # vars
-export EDITOR="vim"
+export EDITOR="subl"
 export HISTCONTRAL=ignoredups
 export HISTFILESIZE=10000
 export HISTZIE=10000

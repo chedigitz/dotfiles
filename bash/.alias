@@ -37,8 +37,17 @@ alias cpwd='pwd|tr -d "\n"|pbcopy' # copy working directory path to clipboard
 alias info="df -h"
 alias dl="youtube-dl"
 alias work="cd ~/Sites/git/work/"
+alias play="cd ~/Sites/playground/"
 alias fl="cd ~/Sites/git/freelance/"
 alias livereloaddie="lsof -iTCP:35729"
+
+
+
+##ack search overhaul
+alias jf="ack --js"
+alias sf="ack --sass"
+alias hf="ack --html"
+
 
 # vim
 alias vime='vim -u ~/.vimrc.encryption.local -x'
