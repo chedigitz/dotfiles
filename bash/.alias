@@ -71,6 +71,9 @@ alias gvis="gitk"
 alias tmux='tmux -2'
 alias resume='tmux a'
 alias tsess='tmux new -s'
+alias t='tmux attach || tmux-session restore && tmux attach || tmux new'
+alias kts='tmux ls | awk "{print $1}" | sed "s/://g" | xargs -I{} tmux kill-session -t {}'
+
 
 # ip addresses
 alias flushdns='dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
