@@ -251,3 +251,32 @@ function hr() {
 	echo ""
 }
 
+## gets ticker info from bittrex
+function getTicker(){
+	hr
+	curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$1 | jsonppcol | pygmentize -l javascript
+	hr
+}
+
+function getTickerLastPrice(){
+	hr
+	curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$1 |jsawk 'return this.result.Last'
+	hr
+
+}
+
+function getTickerLastBid(){
+	hr
+	curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$1 |jsawk 'return this.result.Bid'
+	hr
+}
+
+function getTickerLastAsk(){
+	hr
+	curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$1 |jsawk 'return this.result.Ask'
+	hr
+}
+
+function getTickerStatusBar(){
+	curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Ask'
+}
