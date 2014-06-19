@@ -35,7 +35,7 @@ function getBid(){
 # returns the BTC echange
 function getBTCUSD(){
 	currentBTC=$(curl -s https://www.bitstamp.net/api/ticker/ | jsawk 'return this.last')
-	echo "Current BTC/USD: $currentBTC"
+	# echo "Current BTC/USD: $currentBTC"
 }
 
 function getLastTrade(){
@@ -43,31 +43,30 @@ function getLastTrade(){
 
 }
 
-# set current BTC using global vars yuck 
+# set current BTC using global vars yuck
 getBTCUSD
 
 requestFlag=$1
 symbol=$2
+coins=$3
 # checks flag routes to source
+hr
 if [[ "$requestFlag" = "bid" ]]; then
 	#statements
 	getBid
-	hr
-	echo "BID PRICE for $symbol"
+	echo "BID PRICE for $symbol coin"
 fi
 
 if [[ "$requestFlag" = "last" ]]; then
 	#statements
 	getLast
-	hr
-	echo "LAST PRICE for $symbol"
+	echo "LAST PRICE for $symbol coin"
 fi
 
 if [[ "$requestFlag" = "ask" ]]; then
 	#statements
 	getAsk
-	hr
-	echo "ASK PRICE for $symbol"
+	echo "ASK PRICE for $symbol coin"
 
 fi
 
@@ -77,10 +76,14 @@ if [[ "$requestFlag" = "x" ]]; then
 fi
 
 
-
-echo "BTC: $currentPrice"
+USD_COLOR="\033[38;05;118m"
+RESET_COLOR="\033[m"
+BTC_COLOR="\033[38;05;226m"
+echo -e "BTC: $BTC_COLOR $currentPrice $RESET_COLOR"
+echo -ne "USD: $USD_COLOR $ "
+echo "scale=4; ($currentPrice * $currentBTC)/1" | bc
+echo -ne "\033[m"
+echo -ne "Current Market Value: $USD_COLOR $ "
+echo "scale=2; ($currentPrice * $currentBTC * $coins)/1" | bc
+echo -ne "\033[m"
 hr
-printf "USD: "
-echo "scale=4; ($currentPrice * $currentBTC)/1" | bc 
-hr
-
