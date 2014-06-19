@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+#gets and returns the ask price from bittrex
+function getAsk(){
+	currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Ask')
+}
+
+#gets and returns the last price from bitrex
+function getLast(){
+   currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Last')
+}
+
+#gets and returns the last Bid from bittrex
+function getBid(){
+    currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Bid')
+}
+
+# returns the BTC echange
+function getBTCUSD(){
+	currentBTC=$(curl -s https://www.bitstamp.net/api/ticker/ | jsawk 'return this.last')
+	echo "Current BTC/USD: $currentBTC"
+}
+
+# set current BTC using global vars yuck 
+getBTCUSD
+
+requestFlag=$1
+# checks flag routes to source
+if [[ "$requestFlag" = "bid" ]]; then
+	#statements
+	echo "getting bid"
+	getBid
+fi
+
+if [[ "$requestFlag" = "last" ]]; then
+	#statements
+	echo "getting last"
+	getLast
+fi
+
+if [[ "$requestFlag" = "ask" ]]; then
+	#statements
+	echo "getting ask"
+	getAsk
+fi
+
+echo "BTC: $currentPrice"
+printf "USD: "
+echo "scale=4; ($currentPrice * $currentBTC)/1" | bc 
+
