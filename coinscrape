@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# functions
+if [ -f "masterCoinList.txt" ]; then
+    masterCoinList=$(cat masterCoinList.txt)
+else
+	masterCoinList=""
+fi
+
+
+coinInfo=$(curl -s https://bitcointalk.org/index.php?board=159.0)
+coinHard=$(echo "$coinInfo" | grep "\[ANN\]" | sed -e 's/<[^>]*>//g' | grep -v -E '\w+coin')
+
+coinPass1=$(echo "$coinInfo" | grep "\[ANN\]" | sed -n -r -e 's/^.*\ (\w+coin).*$/\1/ip')
+coinPass2=$(echo "$coinHard" | sed -n -r -e 's/^.*(\ |\])(\w+[\ \-\_\.]coin).*$/\2/ip')
+coinPass3=$(echo "$coinHard" | sed -n -r -e 's/^.*(\ |\])(coin[\ \-\_\.]\w+).*$/\2/ip')
+
+masterCoinList=$(echo "$coinPass1 \n$coinPass2 \n$coinPass3 \n$masterCoinList" | sed 's/[ \t]*$//' | sort -u | grep -v '^$')
+
+echo "$masterCoinList" > masterCoinList.txt
+echo "$masterCoinList"
