@@ -1,18 +1,35 @@
 #!/usr/bin/env bash
 
+# Create a horizontal rule, hr style
+function hr() {
+	set -f
+	if [[ -n $1 ]]; then
+		space_character=$( echo $1 | head -c 1)
+	else
+		space_character='='
+	fi
+
+	for i in $(seq 1 $(tput cols));
+	do
+		echo -n "${space_character}";
+	done
+
+	echo ""
+}
+
 #gets and returns the ask price from bittrex
 function getAsk(){
-	currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Ask')
+	currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$symbol |jsawk 'return this.result.Ask')
 }
 
 #gets and returns the last price from bitrex
 function getLast(){
-   currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Last')
+   currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$symbol |jsawk 'return this.result.Last')
 }
 
 #gets and returns the last Bid from bittrex
 function getBid(){
-    currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-SUPER |jsawk 'return this.result.Bid')
+    currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$symbol |jsawk 'return this.result.Bid')
 }
 
 # returns the BTC echange
@@ -21,30 +38,49 @@ function getBTCUSD(){
 	echo "Current BTC/USD: $currentBTC"
 }
 
+function getLastTrade(){
+	currentPrice=$(curl -s https://bittrex.com/api/v1/public/getticker?market=BTC-$symbol |jsawk 'return this.result.Last')
+
+}
+
 # set current BTC using global vars yuck 
 getBTCUSD
 
 requestFlag=$1
+symbol=$2
 # checks flag routes to source
 if [[ "$requestFlag" = "bid" ]]; then
 	#statements
-	echo "getting bid"
 	getBid
+	hr
+	echo "BID PRICE for $symbol"
 fi
 
 if [[ "$requestFlag" = "last" ]]; then
 	#statements
-	echo "getting last"
 	getLast
+	hr
+	echo "LAST PRICE for $symbol"
 fi
 
 if [[ "$requestFlag" = "ask" ]]; then
 	#statements
-	echo "getting ask"
 	getAsk
+	hr
+	echo "ASK PRICE for $symbol"
+
 fi
 
+if [[ "$requestFlag" = "x" ]]; then
+	#statements
+	getLastTrade
+fi
+
+
+
 echo "BTC: $currentPrice"
+hr
 printf "USD: "
 echo "scale=4; ($currentPrice * $currentBTC)/1" | bc 
+hr
 
